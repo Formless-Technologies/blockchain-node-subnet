@@ -19,19 +19,20 @@
 
 import typing
 import bittensor as bt
+import json
 
 # (developer): Formless Technologies
 
 
-class DoSubtensorQuerySynapse(bt.Synapse):
+class DoMinerSubtensorRPCSynapse(bt.Synapse):
 
     # Required request input, filled by sending dendrite caller.
-    json_query: int
+    rpc_query: dict
 
     # Optional request output, filled by recieving axon.
-    tx_hash: typing.Optional[str] = None
+    response: typing.Optional[dict] = None
 
-    def deserialize(self) -> str:
+    def deserialize(self) -> dict:
         """
         Deserialize the output. This method retrieves the response from
         the miner in the form of block_hash, deserializes it and returns it
@@ -40,7 +41,7 @@ class DoSubtensorQuerySynapse(bt.Synapse):
         Returns:
         - str: The deserialized response
         """
-        return self.tx_hash
+        return self.response
     
 
 class SubtensorQueryBlockHashSynapse(bt.Synapse):
