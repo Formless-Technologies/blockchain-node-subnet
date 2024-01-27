@@ -22,6 +22,27 @@ import bittensor as bt
 
 # (developer): Formless Technologies
 
+
+class DoSubtensorQuerySynapse(bt.Synapse):
+
+    # Required request input, filled by sending dendrite caller.
+    json_query: int
+
+    # Optional request output, filled by recieving axon.
+    tx_hash: typing.Optional[str] = None
+
+    def deserialize(self) -> str:
+        """
+        Deserialize the output. This method retrieves the response from
+        the miner in the form of block_hash, deserializes it and returns it
+        as the output of the dendrite.query() call.
+
+        Returns:
+        - str: The deserialized response
+        """
+        return self.tx_hash
+    
+
 class SubtensorQueryBlockHashSynapse(bt.Synapse):
     """
     Requests the block hash of the specific block on the Bittensor network.

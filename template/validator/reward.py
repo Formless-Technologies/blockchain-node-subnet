@@ -21,21 +21,23 @@ import torch
 from typing import List
 
 
-def reward(query: int, response: str) -> float:
+def reward(expected: str, response: str) -> float:
     """
-    Reward the miner response to the dummy request. This method returns a reward
+    Reward the miner response. This method returns a reward
     value for the miner, which is used to update the miner's score.
 
     Returns:
     - float: The reward value for the miner.
     """
-
-    return 1.0
+    if (response == expected):
+        return 1.0
+    else:
+        return 0.0
 
 
 def get_rewards(
     self,
-    query: int,
+    expected: str,
     responses: List[float],
 ) -> torch.FloatTensor:
     """
@@ -50,5 +52,5 @@ def get_rewards(
     """
     # Get all the reward results by iteratively calling your reward() function.
     return torch.FloatTensor(
-        [reward(query, response) for response in responses]
+        [reward(expected, response) for response in responses]
     ).to(self.device)

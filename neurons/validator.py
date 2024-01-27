@@ -24,8 +24,10 @@ import time
 import bittensor as bt
 
 # Bittensor Validator Template:
-import template
-from template.validator import forward
+from template.protocol import SubtensorQueryBlockHashSynapse
+from template.validator.reward import get_rewards
+from template.utils.uids import get_random_uids
+import random
 
 # import base validator class which takes care of most of the boilerplate
 from template.base.validator import BaseValidatorNeuron
@@ -45,7 +47,6 @@ class Validator(BaseValidatorNeuron):
         bt.logging.info("load_state()")
         self.load_state()
 
-        # TODO(developer): Anything specific to your use case you can do here
 
     async def forward(self):
         """
@@ -56,8 +57,31 @@ class Validator(BaseValidatorNeuron):
         - Rewarding the miners
         - Updating the scores
         """
-        time.sleep(10)
-        return await forward(self)
+
+        # get_random_uids is an example method, but you can replace it with your own.
+        miner_uids = get_random_uids(self, k=1)
+
+        block_to_query = random.randrange(self.subtensor.get_current_block())
+
+        # The dendrite client queries the network.
+        responses = self.dendrite.query(
+            # Send the query to selected miner axons in the network.
+            axons=[self.metagraph.axons[uid] for uid in miner_uids],
+            # Construct a block hash query.
+            synapse=SubtensorQueryBlockHashSynapse(block_hash_to_retrieve=block_to_query),
+            deserialize=True,
+        )
+
+        # Log the results for monitoring purposes.
+        bt.logging.info(f"Received responses: {responses}")
+
+        # Adjust the scores based on responses from miners.
+        rewards = get_rewards(self, expected=self.subtensor.get_block_hash(block_to_query), responses=responses)
+
+        bt.logging.info(f"Scored responses: {rewards}")
+        # Update the scores based on the rewards.
+        self.update_scores(rewards, miner_uids)
+    
 
 
 # The main function parses the configuration and runs the validator.

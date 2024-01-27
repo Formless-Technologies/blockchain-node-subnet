@@ -25,7 +25,7 @@ from neurons.validator import Neuron as Validator
 from neurons.miner import Neuron as Miner
 
 from template.protocol import Dummy
-from template.validator.forward import forward
+from template.validator.subtensor_query_block_hash import subtensor_query_block_hash
 from template.utils.uids import get_random_uids
 from template.validator.reward import get_rewards
 from template.base.validator import BaseValidatorNeuron

@@ -40,23 +40,19 @@ class Miner(BaseMinerNeuron):
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
 
-        # TODO(developer): Anything specific to your use case you can do here
 
     async def forward(
         self, synapse: template.protocol.SubtensorQueryBlockHashSynapse
     ) -> template.protocol.SubtensorQueryBlockHashSynapse:
         """
-        Processes the incoming 'Dummy' synapse by performing a predefined operation on the input data.
-        This method should be replaced with actual logic relevant to the miner's purpose.
+        Processes the incoming synapse.
 
         Args:
-            synapse (template.protocol.Dummy): The synapse object containing the 'dummy_input' data.
+            synapse (template.protocol.SubtensorQueryBlockHashSynapse): The synapse object containing the input data.
 
         Returns:
-            template.protocol.Dummy: The synapse object with the 'dummy_output' field set to twice the 'dummy_input' value.
+            template.protocol.SubtensorQueryBlockHashSynapse: The synapse object with the output field set.
 
-        The 'forward' function is a placeholder and should be overridden with logic that is appropriate for
-        the miner's intended operation. This method demonstrates a basic transformation of input data.
         """
         bt.logging.trace(
             f"Received Forward."
