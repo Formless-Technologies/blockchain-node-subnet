@@ -69,7 +69,7 @@ class Validator(BaseValidatorNeuron):
         time.sleep(60)
 
 
-    def do_subtensor_miner_rpc(self, query):
+    async def do_subtensor_miner_rpc(self, query):
         # get_random_uids is an example method, but you can replace it with your own.
         miner_uids = get_random_uids(self, k=1)
 
@@ -83,7 +83,7 @@ class Validator(BaseValidatorNeuron):
         )
 
         # Log the results for monitoring purposes.
-        bt.logging.info(f"Received miner rpc response: {responses[0]}")
+        bt.logging.info(f"Received miner rpc response: {responses}")
 
         return responses[0]
 

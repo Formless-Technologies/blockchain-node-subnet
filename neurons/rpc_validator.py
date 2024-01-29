@@ -30,8 +30,12 @@ import json
 async def handle_rpc(websocket, path):
     async for message in websocket:
         json_rpc_request = json.loads(message)
-        response = validator.do_subtensor_miner_rpc(json_rpc_request)
-        await websocket.send(json.dumps(response))
+        print(f"Received request: {json_rpc_request}")
+        synapse_response = await validator.do_subtensor_miner_rpc(json_rpc_request)
+        print("Relaying response...")
+        # Before relaying, match IDs
+        synapse_response['id'] = json_rpc_request['id']
+        await websocket.send(json.dumps(synapse_response))
 
 start_server = websockets.serve(handle_rpc, "localhost", 8765)
 
@@ -40,6 +44,3 @@ if __name__ == "__main__":
     with Validator() as validator:
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio.get_event_loop().run_forever()
-        while True:
-            bt.logging.info("Validator running...", time.time())
-            time.sleep(5)
