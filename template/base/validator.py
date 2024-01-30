@@ -121,8 +121,8 @@ class BaseValidatorNeuron(BaseNeuron):
             while True:
                 bt.logging.info(f"step({self.step}) block({self.block})")
 
-                # Run multiple challenges concurrently.
-                self.challenge_miner_history()
+                # Run miner challenges.
+                self.challenge_miner()
 
                 # Check if we should exit.
                 if self.should_exit:

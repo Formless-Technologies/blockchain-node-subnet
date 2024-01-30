@@ -31,7 +31,7 @@ async def handle_rpc(websocket, path):
         async for message in websocket:
             json_rpc_request = json.loads(message)
             print(f"Received request: {json_rpc_request}")
-            synapse_response = validator_instance.do_subtensor_miner_rpc(json_rpc_request)
+            synapse_response = validator_instance.organic_miner_subtensor_rpc(json_rpc_request)
             print("Relaying response...")
             # Before relaying, match IDs
             synapse_response['id'] = json_rpc_request['id']

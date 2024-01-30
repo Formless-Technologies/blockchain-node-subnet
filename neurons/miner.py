@@ -33,41 +33,9 @@ class Miner(BaseMinerNeuron):
         super(Miner, self).__init__(config=config)
 
 
-    async def validator_challenge(
-        self, synapse: template.protocol.SubtensorQueryBlockHashSynapse
-    ) -> template.protocol.SubtensorQueryBlockHashSynapse:
-
-        bt.logging.trace(
-            f"Received SubtensorQueryBlockHashSynapse."
-        )
-        query_block = synapse.block_hash_to_retrieve
-        block_hash = self.subtensor.get_block_hash(query_block)
-        synapse.block_hash = block_hash
-        return synapse
-    
-
-
-    async def validator_challenge_blacklist(
-        self, synapse: template.protocol.SubtensorQueryBlockHashSynapse
-    ) -> typing.Tuple[bool, str]:
-
-        if synapse.dendrite.hotkey not in self.metagraph.hotkeys:
-            # Ignore requests from unrecognized entities.
-            bt.logging.trace(
-                f"Blacklisting unrecognized hotkey {synapse.dendrite.hotkey}"
-            )
-            return True, "Unrecognized hotkey"
-
-        bt.logging.trace(
-            f"Not Blacklisting recognized hotkey {synapse.dendrite.hotkey}"
-        )
-        return False, "Hotkey recognized!"
-    
-
-
     async def validator_rpc_request(
-        self, synapse: template.protocol.DoMinerSubtensorRPCSynapse
-    ) -> template.protocol.DoMinerSubtensorRPCSynapse:
+        self, synapse: template.protocol.MinerSubtensorRPCSynapse
+    ) -> template.protocol.MinerSubtensorRPCSynapse:
 
         query = synapse.rpc_query
         
@@ -77,7 +45,7 @@ class Miner(BaseMinerNeuron):
 
 
     async def validator_rpc_blacklist(
-        self, synapse: template.protocol.DoMinerSubtensorRPCSynapse
+        self, synapse: template.protocol.MinerSubtensorRPCSynapse
     ) -> typing.Tuple[bool, str]:
 
         if synapse.dendrite.hotkey not in self.metagraph.hotkeys:

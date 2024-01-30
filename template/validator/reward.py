@@ -20,7 +20,7 @@ import torch
 from typing import List
 
 
-def reward(expected: str, response: str) -> float:
+def reward(expected: dict, response: dict) -> float:
     """
     Reward the miner response. This method returns a reward
     value for the miner, which is used to update the miner's score.
@@ -28,6 +28,9 @@ def reward(expected: str, response: str) -> float:
     Returns:
     - float: The reward value for the miner.
     """
+    
+    # Manually realign RPC ids.
+    response['id'] = expected['id']
     if (response == expected):
         return 1.0
     else:
@@ -36,8 +39,8 @@ def reward(expected: str, response: str) -> float:
 
 def get_rewards(
     self,
-    expected: str,
-    responses: List[float],
+    expected: dict,
+    responses: List[dict],
 ) -> torch.FloatTensor:
     """
     Returns a tensor of rewards for the given query and responses.

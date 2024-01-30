@@ -23,7 +23,7 @@ import json
 # (developer): Formless Technologies
 
 
-class DoMinerSubtensorRPCSynapse(bt.Synapse):
+class MinerSubtensorRPCSynapse(bt.Synapse):
 
     # Required request input, filled by sending dendrite caller.
     rpc_query: dict
@@ -42,29 +42,3 @@ class DoMinerSubtensorRPCSynapse(bt.Synapse):
         """
         return self.response
     
-
-class SubtensorQueryBlockHashSynapse(bt.Synapse):
-    """
-    Requests the block hash of the specific block on the Bittensor network.
-
-    Attributes:
-    - block_to_retrieve: An integer value of the block to retrieve the hash of.
-    - block_hash: The retrieved block hash of the specific block, when filled, represents the response from the miner.
-    """
-
-    # Required request input, filled by sending dendrite caller.
-    block_hash_to_retrieve: int
-
-    # Optional request output, filled by recieving axon.
-    block_hash: typing.Optional[str] = None
-
-    def deserialize(self) -> str:
-        """
-        Deserialize the output. This method retrieves the response from
-        the miner in the form of block_hash, deserializes it and returns it
-        as the output of the dendrite.query() call.
-
-        Returns:
-        - str: The deserialized response
-        """
-        return self.block_hash
