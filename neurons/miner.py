@@ -1,5 +1,4 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
 # (developer): Formless Technologies
 # Copyright © 2023 Formless Technologies
 
@@ -39,7 +38,7 @@ class Miner(BaseMinerNeuron):
     ) -> template.protocol.SubtensorQueryBlockHashSynapse:
 
         bt.logging.trace(
-            f"Received SubtensorQueryBlockHash."
+            f"Received SubtensorQueryBlockHashSynapse."
         )
         query_block = synapse.block_hash_to_retrieve
         block_hash = self.subtensor.get_block_hash(query_block)
@@ -70,9 +69,6 @@ class Miner(BaseMinerNeuron):
         self, synapse: template.protocol.DoMinerSubtensorRPCSynapse
     ) -> template.protocol.DoMinerSubtensorRPCSynapse:
 
-        bt.logging.trace(
-            f"Received DoMinerSubtensorRPCSynapse."
-        )
         query = synapse.rpc_query
         
         synapse.response = self.subtensor.substrate.rpc_request(method=query['method'], params=query['params'])

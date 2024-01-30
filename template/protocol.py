@@ -1,5 +1,4 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
 # (developer): Formless Technologies
 # Copyright © 2023 Formless Technologies
 

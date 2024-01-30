@@ -1,7 +1,6 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
-# TODO(developer): Set your name
-# Copyright © 2023 <your name>
+# TODO(developer): Formless Technologies
+# Copyright © 2023 Formless Technologies
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -23,10 +22,9 @@ import torch
 import asyncio
 import threading
 import bittensor as bt
-
+from template import __spec_version__ as spec_version
 from typing import List
 from traceback import print_exception
-
 from template.base.neuron import BaseNeuron
 
 
@@ -89,13 +87,6 @@ class BaseValidatorNeuron(BaseNeuron):
             )
             pass
 
-    async def concurrent_challenge(self):
-        coroutines = [
-            self.challenge_miner_history()
-            for _ in range(self.config.neuron.num_concurrent_forwards)
-        ]
-        await asyncio.gather(*coroutines)
-
     def run(self):
         """
         Initiates and manages the main loop for the miner on the Bittensor network. The main loop handles graceful shutdown on keyboard interrupts and logs unforeseen errors.
@@ -131,7 +122,7 @@ class BaseValidatorNeuron(BaseNeuron):
                 bt.logging.info(f"step({self.step}) block({self.block})")
 
                 # Run multiple challenges concurrently.
-                self.loop.run_until_complete(self.concurrent_challenge())
+                self.challenge_miner_history()
 
                 # Check if we should exit.
                 if self.should_exit:
@@ -217,7 +208,7 @@ class BaseValidatorNeuron(BaseNeuron):
         # Calculate the average reward for each uid across non-zero values.
         # Replace any NaN values with 0.
         raw_weights = torch.nn.functional.normalize(
-            self.moving_averaged_scores, p=1, dim=0
+            self.scores, p=1, dim=0
         )
 
         bt.logging.debug("raw_weights", raw_weights)

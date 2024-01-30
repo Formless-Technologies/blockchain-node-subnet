@@ -1,5 +1,4 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
 # (developer): Formless Technologies
 # Copyright © 2023 Formless Technologies
 
@@ -24,20 +23,45 @@ import asyncio
 import websockets
 import json
 
+validator_instance = None
+
 async def handle_rpc(websocket, path):
-    async for message in websocket:
-        json_rpc_request = json.loads(message)
-        print(f"Received request: {json_rpc_request}")
-        synapse_response = await validator.do_subtensor_miner_rpc(json_rpc_request)
-        print("Relaying response...")
-        # Before relaying, match IDs
-        synapse_response['id'] = json_rpc_request['id']
-        await websocket.send(json.dumps(synapse_response))
+    global validator_instance
+    try:
+        async for message in websocket:
+            json_rpc_request = json.loads(message)
+            print(f"Received request: {json_rpc_request}")
+            synapse_response = validator_instance.do_subtensor_miner_rpc(json_rpc_request)
+            print("Relaying response...")
+            # Before relaying, match IDs
+            synapse_response['id'] = json_rpc_request['id']
+            await websocket.send(json.dumps(synapse_response))
+    except websockets.ConnectionClosed:
+        print('Connection Closed')
 
-start_server = websockets.serve(handle_rpc, "localhost", 8765)
 
-# The main function parses the configuration and runs the rpc validator.
+def create_validator():
+    global validator_instance
+    validator_instance = Validator()
+    validator_instance.run_in_background_thread()
+
+
+def cleanup():
+    global validator_instance
+    validator_instance.stop_run_thread()
+    validator_instance = None
+
+
+async def main():
+    create_validator()
+    async with websockets.serve(handle_rpc, "localhost", 8765):
+        print("Server started at ws://localhost:8765")
+        try:
+            await asyncio.Future()  # run forever
+        finally:
+            cleanup()
+
+
+# Main
 if __name__ == "__main__":
-    with Validator() as validator:
-        asyncio.get_event_loop().run_until_complete(start_server)
-        asyncio.get_event_loop().run_forever()
+    asyncio.run(main())

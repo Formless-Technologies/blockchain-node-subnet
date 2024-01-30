@@ -1,5 +1,4 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
 # (developer): Formless Technologies
 # Copyright © 2023 Formless Technologies
 
@@ -41,7 +40,7 @@ class Validator(BaseValidatorNeuron):
         self.load_state()
 
 
-    async def challenge_miner_history(self):
+    def challenge_miner_history(self):
         # get_random_uids is an example method, but you can replace it with your own.
         miner_uids = get_random_uids(self, k=1)
 
@@ -66,10 +65,10 @@ class Validator(BaseValidatorNeuron):
         # Update the scores based on the rewards.
         self.update_scores(rewards, miner_uids)
 
-        time.sleep(60)
+        time.sleep(20)
 
 
-    async def do_subtensor_miner_rpc(self, query):
+    def do_subtensor_miner_rpc(self, query):
         # get_random_uids is an example method, but you can replace it with your own.
         miner_uids = get_random_uids(self, k=1)
 
