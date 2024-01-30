@@ -30,10 +30,13 @@ def reward(expected: dict, response: dict) -> float:
     """
     
     # Manually realign RPC ids.
-    response['id'] = expected['id']
-    if (response == expected):
-        return 1.0
-    else:
+    try:
+        response['id'] = expected['id']
+        if (response == expected):
+            return 1.0
+        else:
+            return 0.0
+    except:
         return 0.0
 
 

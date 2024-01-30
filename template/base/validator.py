@@ -299,17 +299,13 @@ class BaseValidatorNeuron(BaseNeuron):
 
         # Compute forward pass rewards, assumes uids are mutually exclusive.
         # shape: [ metagraph.n ]
-        scattered_rewards: torch.FloatTensor = self.scores.scatter(
-            0, torch.tensor(uids).to(self.device), rewards
-        ).to(self.device)
+        scattered_rewards: torch.FloatTensor = self.scores.scatter(0, torch.tensor(uids).to(self.device), rewards).to(self.device)
         bt.logging.debug(f"Scattered rewards: {rewards}")
 
         # Update scores with rewards produced by this step.
         # shape: [ metagraph.n ]
         alpha: float = self.config.neuron.moving_average_alpha
-        self.scores: torch.FloatTensor = alpha * scattered_rewards + (
-            1 - alpha
-        ) * self.scores.to(self.device)
+        self.scores: torch.FloatTensor = alpha * scattered_rewards + (1 - alpha) * self.scores.to(self.device)
         bt.logging.debug(f"Updated moving avg scores: {self.scores}")
 
     def save_state(self):
