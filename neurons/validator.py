@@ -42,7 +42,7 @@ class Validator(BaseValidatorNeuron):
 
     def challenge_miner(self):
         # Choose random miners to challenge their RPC results. #TODO Change from 1 miner
-        miner_uids = get_random_uids(self, k=1)
+        miner_uids = get_random_uids(self, k=32)
 
         # Choose a random RPC query to challenge miners with
         chain_getBlockHash_challenge_query = {"jsonrpc": "2.0", "method": "chain_getBlockHash", "params": [random.randrange(self.subtensor.get_current_block())], "id": 1}
