@@ -75,7 +75,7 @@ class Validator(BaseValidatorNeuron):
         # Update the scores based on the rewards.
         self.update_scores(rewards, miner_uids)
 
-        time.sleep(30)
+        time.sleep(5)
 
 
     def organic_miner_subtensor_rpc(self, query):

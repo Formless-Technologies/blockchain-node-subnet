@@ -29,15 +29,17 @@ def reward(expected: dict, response: dict) -> float:
     - float: The reward value for the miner.
     """
     
-    # Manually realign RPC ids.
+    
     try:
+        # Manually realign RPC ids.
         response['id'] = expected['id']
         if (response == expected):
             return 1.0
         else:
-            return 0.0
+            return -3.0
     except:
-        return 0.0
+        # Miner responded invalidly
+        return -3.0
 
 
 def get_rewards(

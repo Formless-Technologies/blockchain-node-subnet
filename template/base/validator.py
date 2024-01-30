@@ -247,6 +247,10 @@ class BaseValidatorNeuron(BaseNeuron):
             wait_for_inclusion=True,
             version_key=spec_version,
         )
+
+        # Reset miner scores for next epoch
+        self.scores = torch.zeros_like(self.metagraph.S, dtype=torch.float32)
+
         if result is True:
             bt.logging.info("set_weights on chain successfully!")
         else:
@@ -297,16 +301,10 @@ class BaseValidatorNeuron(BaseNeuron):
             # Replace any NaN values in rewards with 0.
             rewards = torch.nan_to_num(rewards, 0)
 
-        # Compute forward pass rewards, assumes uids are mutually exclusive.
-        # shape: [ metagraph.n ]
-        scattered_rewards: torch.FloatTensor = self.scores.scatter(0, torch.tensor(uids).to(self.device), rewards).to(self.device)
-        bt.logging.debug(f"Scattered rewards: {rewards}")
+        # Add scores
+        self.scores.index_add_(0, torch.tensor(uids).to(self.device), rewards).to(self.device)
 
-        # Update scores with rewards produced by this step.
-        # shape: [ metagraph.n ]
-        alpha: float = self.config.neuron.moving_average_alpha
-        self.scores: torch.FloatTensor = alpha * scattered_rewards + (1 - alpha) * self.scores.to(self.device)
-        bt.logging.debug(f"Updated moving avg scores: {self.scores}")
+        bt.logging.debug(f"Updated miner points: {self.scores}")
 
     def save_state(self):
         """Saves the state of the validator to a file."""
