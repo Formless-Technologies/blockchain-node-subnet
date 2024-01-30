@@ -29,7 +29,6 @@ def reward(expected: dict, response: dict) -> float:
     - float: The reward value for the miner.
     """
     
-    
     try:
         # Manually realign RPC ids.
         response['id'] = expected['id']
