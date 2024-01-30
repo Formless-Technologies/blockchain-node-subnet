@@ -248,10 +248,9 @@ class BaseValidatorNeuron(BaseNeuron):
             version_key=spec_version,
         )
 
-        # Reset miner scores for next epoch
-        self.scores = torch.zeros_like(self.metagraph.S, dtype=torch.float32)
-
         if result is True:
+            # Reset miner scores for next epoch
+            self.scores = torch.zeros_like(self.metagraph.S, dtype=torch.float32)
             bt.logging.info("set_weights on chain successfully!")
         else:
             bt.logging.error("set_weights failed")
