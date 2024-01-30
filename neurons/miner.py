@@ -33,6 +33,7 @@ class Miner(BaseMinerNeuron):
         super(Miner, self).__init__(config=config)
 
 
+    # Receives an rpc request from a validator and processes it on local subtensor node.
     async def validator_rpc_request(
         self, synapse: template.protocol.MinerSubtensorRPCSynapse
     ) -> template.protocol.MinerSubtensorRPCSynapse:
@@ -43,7 +44,7 @@ class Miner(BaseMinerNeuron):
         return synapse
     
 
-
+    # Determines whether a given Synapse request should be blacklisted
     async def validator_rpc_blacklist(
         self, synapse: template.protocol.MinerSubtensorRPCSynapse
     ) -> typing.Tuple[bool, str]:

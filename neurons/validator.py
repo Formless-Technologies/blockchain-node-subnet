@@ -40,25 +40,28 @@ class Validator(BaseValidatorNeuron):
         self.load_state()
 
 
-    def challenge_miner(self):
-        # Choose random miners to challenge their RPC results. #TODO Change from 1 miner
+    # Challenges miners on the network with synthetic RPC calls, compares them to our nodes ground truth, rewards correct miners with points.
+    def challenge_miners(self):
+        # Choose random subset of miners to challenge their RPC results.
         miner_uids = get_random_uids(self, k=32)
 
-        # Choose a random RPC query to challenge miners with
+        # Set up random rpc queries to challenge miners with
         chain_getBlockHash_challenge_query = {"jsonrpc": "2.0", "method": "chain_getBlockHash", "params": [random.randrange(self.subtensor.get_current_block())], "id": 1}
         chain_getFinalizedHead_challenge_query = {"jsonrpc": "2.0", "method": "chain_getFinalizedHead", "params": [], "id": 1}
         chain_system_version_challenge_query = {"jsonrpc": "2.0", "method": "system_version", "params": [], "id": 1}
+
+        # Choose a random query
         rpc_challenges = [chain_getBlockHash_challenge_query, chain_getFinalizedHead_challenge_query, chain_system_version_challenge_query]
         chosen_challenge_rpc = random.choice(rpc_challenges)
 
-        # Query your own Subtensor node to find ground truth answer
+        # Query your own Subtensor node to find ground truth answer for query
         ground_truth = self.subtensor.substrate.rpc_request(method=chosen_challenge_rpc['method'], params=chosen_challenge_rpc['params'])
 
         # The dendrite client queries the network.
         responses = self.dendrite.query(
             # Send the query to selected miner axons in the network.
             axons=[self.metagraph.axons[uid] for uid in miner_uids],
-            # Construct a block hash query.
+            # Construct an rpc query.
             synapse=MinerSubtensorRPCSynapse(rpc_query=chosen_challenge_rpc),
             deserialize=True,
         )
@@ -68,16 +71,17 @@ class Validator(BaseValidatorNeuron):
         # Log the results for monitoring purposes.
         bt.logging.info(f"Expected response: {ground_truth}")
 
-        # Adjust the scores based on responses from miners.
+        # Check if miner responses match ground truth, if they do award points.
         rewards = get_rewards(self, expected=ground_truth, responses=responses)
         
         bt.logging.info(f"Scored responses: {rewards}")
+
         # Update the scores based on the rewards.
         self.update_scores(rewards, miner_uids)
 
-        time.sleep(5)
 
 
+    # Used by rpc_validator.py to relay a real rpc request to a single miner on the network
     def organic_miner_subtensor_rpc(self, query):
         # Choose random miners to send RPC request.
         miner_uids = get_random_uids(self, k=1)

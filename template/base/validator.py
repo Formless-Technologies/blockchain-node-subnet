@@ -26,6 +26,7 @@ from template import __spec_version__ as spec_version
 from typing import List
 from traceback import print_exception
 from template.base.neuron import BaseNeuron
+import time
 
 
 class BaseValidatorNeuron(BaseNeuron):
@@ -122,7 +123,10 @@ class BaseValidatorNeuron(BaseNeuron):
                 bt.logging.info(f"step({self.step}) block({self.block})")
 
                 # Run miner challenges.
-                self.challenge_miner()
+                self.challenge_miners()
+
+                # Wait 5 seconds before looping and challenging miners again. # TODO - this is a hacky way to do this. 
+                time.sleep(5)
 
                 # Check if we should exit.
                 if self.should_exit:
