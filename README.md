@@ -35,3 +35,32 @@ Currently it compares synthetic rpc call responses from miners to the ground tru
 If the miners response correctly matches the validators it is rewarded a single point. If the miners response is incorrect it is deducted 3 points. 
 
 Once per Epoch (100 blocks), the points are reset and the weights of each miner are set proportional to the relative amount of points they have earned compared to all other miners.
+
+
+## Roadmap
+
+### T+1 Month after Launch
+
+- Fine-tune reward mechanism
+
+- Monitoring Subnet stability
+
+- Launch of ws://subtensor.formless.tech public node
+
+## T+3 Months after Launch 
+
+- Ethereum Node RPC Access
+
+- Bounty Rewards for Bugs / Protocol Oversights
+
+## ~T+6 Months after Launch
+
+- Bitcoin Node Access
+
+## Planned Features
+
+- Miners with Block Creation / Proposing access can offer MEV / Flashbot services for large boost to rewards
+
+- Archival Data Nodes Miner Support
+
+- Different rewards for different types of RPC calls
