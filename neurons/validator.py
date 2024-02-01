@@ -43,7 +43,7 @@ class Validator(BaseValidatorNeuron):
     # Challenges miners on the network with synthetic RPC calls, compares them to our nodes ground truth, rewards correct miners with points.
     def challenge_miners(self):
         # Choose random subset of miners to challenge their RPC results.
-        miner_uids = get_random_uids(self, k=32)
+        miner_uids = get_random_uids(self, k=1)
 
         # Set up random rpc queries to challenge miners with
         chain_getBlockHash_challenge_query = {"jsonrpc": "2.0", "method": "chain_getBlockHash", "params": [random.randrange(self.subtensor.get_current_block())], "id": 1}
