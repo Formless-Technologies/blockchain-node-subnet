@@ -126,6 +126,7 @@ class BaseValidatorNeuron(BaseNeuron):
                 self.challenge_miners()
 
                 # Wait 5 seconds before looping and challenging miners again. # TODO - this is a hacky way to do this. 
+                # IDEA - Randomly choose time to sleep within some range, this can prevent identifying challenges by their spaced repetition
                 time.sleep(5)
 
                 # Check if we should exit.

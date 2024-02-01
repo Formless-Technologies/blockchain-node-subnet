@@ -102,10 +102,7 @@ class BaseMinerNeuron(BaseNeuron):
         # This loop maintains the miner's operations until intentionally stopped.
         try:
             while not self.should_exit:
-                while (
-                    self.block - self.metagraph.last_update[self.uid]
-                    < self.config.neuron.epoch_length
-                ):
+                while (self.block - self.metagraph.last_update[self.uid]< self.config.neuron.epoch_length):
                     # Wait before checking again.
                     time.sleep(1)
 
@@ -115,6 +112,7 @@ class BaseMinerNeuron(BaseNeuron):
 
                 # Sync metagraph and potentially set weights.
                 self.sync()
+                time.sleep(1)
                 self.step += 1
 
         # If someone intentionally stops the miner, it'll safely terminate operations.
@@ -212,3 +210,7 @@ class BaseMinerNeuron(BaseNeuron):
 
         # Sync the metagraph.
         self.metagraph.sync(subtensor=self.subtensor)
+
+    # Dummy save_state for miner, as no state needs to be saved currently
+    def save_state(self):
+        return

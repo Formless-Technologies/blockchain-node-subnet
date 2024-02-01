@@ -43,6 +43,7 @@ class Validator(BaseValidatorNeuron):
     # Challenges miners on the network with synthetic RPC calls, compares them to our nodes ground truth, rewards correct miners with points.
     def challenge_miners(self):
         # Choose random subset of miners to challenge their RPC results.
+        # TODO Change to randomly sized subset of miners (~2/3s of network)
         miner_uids = get_random_uids(self, k=1)
 
         # Set up random rpc queries to challenge miners with
@@ -80,10 +81,9 @@ class Validator(BaseValidatorNeuron):
         self.update_scores(rewards, miner_uids)
 
 
-
     # Used by rpc_validator.py to relay a real rpc request to a single miner on the network
     def organic_miner_subtensor_rpc(self, query):
-        # Choose random miners to send RPC request.
+        # Choose random miner to send RPC request.
         miner_uids = get_random_uids(self, k=1)
 
         # The dendrite client queries the network.
@@ -99,7 +99,6 @@ class Validator(BaseValidatorNeuron):
         bt.logging.info(f"Received miner rpc response: {responses}")
 
         return responses[0]
-
 
 
 # The main function parses the configuration and runs the validator.
