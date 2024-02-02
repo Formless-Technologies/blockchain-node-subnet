@@ -47,10 +47,10 @@ class Validator(BaseValidatorNeuron):
         # Set up random rpc queries to challenge miners with
         chain_getBlockHash_challenge_query = {"jsonrpc": "2.0", "method": "chain_getBlockHash", "params": [random.randrange(self.subtensor.get_current_block())], "id": 1}
         chain_getFinalizedHead_challenge_query = {"jsonrpc": "2.0", "method": "chain_getFinalizedHead", "params": [], "id": 1}
-        chain_system_version_challenge_query = {"jsonrpc": "2.0", "method": "system_version", "params": [], "id": 1}
+        chain_system_chain_challenge_query = {"jsonrpc": "2.0", "method": "system_chain", "params": [], "id": 1}
 
         # Choose a random query
-        rpc_challenges = [chain_getBlockHash_challenge_query, chain_getFinalizedHead_challenge_query, chain_system_version_challenge_query]
+        rpc_challenges = [chain_getBlockHash_challenge_query, chain_getFinalizedHead_challenge_query, chain_system_chain_challenge_query]
         chosen_challenge_rpc = random.choice(rpc_challenges)
 
         # Query your own Subtensor node to find ground truth answer for query
