@@ -58,7 +58,7 @@ git clone https://github.com/opentensor/subtensor
 4. Start your local subtensor node with docker
 ```bash
 cd subtensor
-sudo ./subtensor/scripts/run/subtensor.sh -e docker --network mainnet --node-type lite
+sudo ./scripts/run/subtensor.sh -e docker --network mainnet --node-type lite
 cd ..
 ```
 
