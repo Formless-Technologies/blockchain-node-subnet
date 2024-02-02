@@ -30,29 +30,39 @@ The main files related to mining / validating are:
 
 In order to mine or validate on this subnet you must complete the following steps / setup.
 
-1. Ensure you have docker & docker-compose installed on your system
+1. Install dependencies
 
 ```bash
 sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install git-all
+sudo apt-get install python3-pip
+sudo apt-get install python3-venv
+```
+
+2. Ensure you have docker & docker-compose installed on your system
+
+```bash
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh ./get-docker.sh
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-2. Clone both repositories you will need
+3. Clone both repositories you will need
 
 ```bash
 git clone https://github.com/Formless-Technologies/blockchain-node-subnet
 git clone https://github.com/opentensor/subtensor
 ```
 
-3. Start your local subtensor node with docker
+4. Start your local subtensor node with docker
 ```bash
+cd subtensor
 sudo ./subtensor/scripts/run/subtensor.sh -e docker --network mainnet --node-type lite
+cd ..
 ```
 
-4. Create a virtual environment for the subnet and install requirements
+5. Create a virtual environment for the subnet and install requirements
 ```
 cd blockchain-node-subnet
 python3 -m venv venv
@@ -61,19 +71,18 @@ pip install -r requirements.txt
 python3 -m pip install -e .
 ```
 
-5. Ensure you have a Bittensor Cold and Hot wallet created and funded. [Bittensor Wallet Creation Guide](https://docs.bittensor.com/getting-started/wallets)
+6. Ensure you have a Bittensor Cold and Hot wallet created and funded. [Bittensor Wallet Creation Guide](https://docs.bittensor.com/getting-started/wallets)
 
-6. Register a UID on the subnet (Subnet ID is not yet confirmed)
+7. Register a UID on the subnet (Subnet ID is not yet confirmed)
 ```bash
 btcli subnet register --wallet.name coldwallet --wallet.hotkey hotwallet --subtensor.network local
 ```
 
-7. Start your miner / validator
+8. Start your miner / validator
 
 **Miner**
 ```bash
-python3 neurons/miner.py --netuid x --subtensor.chain_endpoint ws:/
-/127.0.0.1:9946 --wallet.name coldwallet --wallet.hotkey hotwallet --logging.debug
+python3 neurons/miner.py --netuid x --subtensor.chain_endpoint ws://127.0.0.1:9944 --wallet.name coldwallet --wallet.hotkey hotwallet --logging.debug
 ```
 
 **Validator**
@@ -82,13 +91,13 @@ Validators have the option to either:
 - Run a 'challenge' validator, which only sends synthetic challenges to miners and scores them. 
 
 ```bash
-python neurons/validator.py --netuid x --subtensor.chain_endpoint ws://127.0.0.1:9946 --wallet.name coldwallet --wallet.hotkey hotwallet --logging.debug
+python neurons/validator.py --netuid x --subtensor.chain_endpoint ws://127.0.0.1:9944 --wallet.name coldwallet --wallet.hotkey hotwallet --logging.debug
 ```
 
 - Run a 'RPC Relay' Validator, which also runs a Websocket server that can be used as a replacement chain_endpoint or subtensor.network and relays organic RPC calls to miners on the network.
 
 ```bash
-python neurons/rpc_validator.py --netuid x --subtensor.chain_endpoint ws://127.0.0.1:9946 --wallet.name coldwallet --wallet.hotkey hotwallet --logging.debug
+python neurons/rpc_validator.py --netuid x --subtensor.chain_endpoint ws://127.0.0.1:9944 --wallet.name coldwallet --wallet.hotkey hotwallet --logging.debug
 ```
 
 ### Reward Mechanism
