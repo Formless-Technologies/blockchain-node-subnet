@@ -27,6 +27,7 @@ from typing import List
 from traceback import print_exception
 from template.base.neuron import BaseNeuron
 import time
+import random
 
 
 class BaseValidatorNeuron(BaseNeuron):
@@ -126,8 +127,8 @@ class BaseValidatorNeuron(BaseNeuron):
                 self.challenge_miners()
 
                 # Wait 5 seconds before looping and challenging miners again. # TODO - this is a hacky way to do this. 
-                # IDEA - Randomly choose time to sleep within some range, this can prevent identifying challenges by their spaced repetition
-                time.sleep(5)
+                random_sleep_period = random.randrange(3, 10)
+                time.sleep(random_sleep_period)
 
                 # Check if we should exit.
                 if self.should_exit:

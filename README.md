@@ -104,6 +104,10 @@ Once per Epoch (100 blocks), the points are reset and the weights of each miner 
 
 ## Roadmap
 
+### Known Issues
+
+- Subscriptions are not yet supported
+
 ### T+1 Month after Launch
 
 - Fine-tune reward mechanism
