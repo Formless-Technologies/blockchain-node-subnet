@@ -28,6 +28,9 @@ The main files related to mining / validating are:
 
 ### Setup
 
+<details>
+ <summary>Click to show setup instructions</summary>
+
 In order to mine or validate on this subnet you must complete the following steps / setup.
 
 1. Install dependencies
@@ -99,6 +102,8 @@ python neurons/validator.py --netuid x --subtensor.chain_endpoint ws://127.0.0.1
 ```bash
 python neurons/rpc_validator.py --netuid x --subtensor.chain_endpoint ws://127.0.0.1:9944 --wallet.name coldwallet --wallet.hotkey hotwallet --logging.debug
 ```
+
+</details>
 
 ### Reward Mechanism
 
