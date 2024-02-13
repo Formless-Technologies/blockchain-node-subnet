@@ -37,12 +37,29 @@ class Miner(BaseMinerNeuron):
     async def validator_rpc_request(
         self, synapse: template.protocol.MinerSubtensorRPCSynapse
     ) -> template.protocol.MinerSubtensorRPCSynapse:
-
         query = synapse.rpc_query
+
+        if(query['method'] == 'author_submitAndWatchExtrinsic'):
+            print(f"Received watch extrinsic")
+            def result_handler(message, update_nr, subscription_id):
+                # Check if extrinsic is included and finalized
+                if 'params' in message and type(message['params']['result']) is dict:
+
+                    # Convert result enum to lower for backwards compatibility
+                    message_result = {k.lower(): v for k, v in message['params']['result'].items()}
+
+                    if 'inblock' in message_result:
+                        self.subtensor.substrate.rpc_request('author_unwatchExtrinsic', [subscription_id])
+                        return message
+            
+            synapse.response = self.subtensor.substrate.rpc_request(method=query['method'], params=query['params'], result_handler=result_handler)
+            print(f"RETURNING RESULT: {synapse.response}")
+            return synapse
+
+        else:
+            synapse.response = self.subtensor.substrate.rpc_request(method=query['method'], params=query['params'])
+            return synapse
         
-        synapse.response = self.subtensor.substrate.rpc_request(method=query['method'], params=query['params'])
-        return synapse
-    
 
     # Determines whether a given Synapse request should be blacklisted
     async def validator_rpc_blacklist(

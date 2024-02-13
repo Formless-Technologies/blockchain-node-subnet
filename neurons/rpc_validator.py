@@ -32,34 +32,17 @@ async def handle_rpc(websocket, path):
             json_rpc_request = json.loads(message)
             print(f"Received request: {json_rpc_request}")
             
-            retry_count = 0
-            max_retries = 3 
-            synapse_response = None
+            try:
 
-            while retry_count < max_retries and synapse_response is None:
-                try:
-                    synapse_response = validator_instance.organic_miner_subtensor_rpc(json_rpc_request)
-                    if synapse_response is None:
-                        print("Response was None, retrying...")
-                        retry_count += 1
-                        await asyncio.sleep(0.05)  # Wait for a short time before retrying
-                    else:
-                        print("Relaying response...")
-                        # Before relaying, match IDs
-                        synapse_response['id'] = json_rpc_request['id']
-                        await websocket.send(json.dumps(synapse_response))
-                except Exception as e:
-                    print(f"Error occurred: {e}, retrying...")
-                    retry_count += 1
-                    await asyncio.sleep(0.05)
+                synapse_response = validator_instance.organic_miner_subtensor_rpc(json_rpc_request)
+                # Before relaying, match IDs
+                synapse_response['id'] = json_rpc_request['id']
+                await websocket.send(json.dumps(synapse_response))
 
-            if synapse_response is None:
-                print("Max retries reached. Sending error response.")
-                error_response = {
-                    "id": json_rpc_request['id'],
-                    "error": "Failed to get a valid response after retries"
-                }
-                await websocket.send(json.dumps(error_response))
+            except Exception as e:
+                print(f"Error occurred: {e}")
+                await asyncio.sleep(0.05)
+
 
     except websockets.ConnectionClosed:
         print('Connection Closed')

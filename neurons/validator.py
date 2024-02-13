@@ -93,6 +93,7 @@ class Validator(BaseValidatorNeuron):
             # Construct a block hash query.
             synapse=MinerSubtensorRPCSynapse(rpc_query=query),
             deserialize=True,
+            timeout=30.0,
         )
 
         # Log the results for monitoring purposes.
